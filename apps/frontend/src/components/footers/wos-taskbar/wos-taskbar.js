@@ -31,7 +31,7 @@ class WosTaskbar extends BaseComponent {
     template.innerHTML = `
       ${this.#getStyles()}
       <footer class="taskbar">
-        <p class="copyright">&copy; 2025 David Llamas Román. Licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License version 3 (GPL-3.0) only</a>.</p>
+        <p class="copyright">&copy; ${new Date().getFullYear()} David Llamas Román. Licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License version 3 (GPL-3.0) only</a>.</p>
         <ul class="taskbar__list">
           <li class="list__element">
             <wos-icon></wos-icon>
@@ -160,10 +160,15 @@ class WosTaskbar extends BaseComponent {
 
     const toggleVisibility = (event) => {
       const fromBottom = window.innerHeight - event.clientY
+      const menuFocused = menu?.matches(':focus-within')
 
       if (fromBottom <= showDistance) {
         this.classList.add('visible')
-      } else if (!this.matches(':hover') && !(menu && menu.matches(':hover'))) {
+      } else if (
+        !this.matches(':hover') &&
+        !(menu && menu.matches(':hover')) &&
+        !menuFocused
+      ) {
         this.classList.remove('visible')
 
         if (menu) {
@@ -175,7 +180,7 @@ class WosTaskbar extends BaseComponent {
     document.addEventListener('mousemove', toggleVisibility)
 
     this.addEventListener('mouseleave', () => {
-      if (!menu.matches(':hover')) {
+      if (menu && !menu.matches(':hover') && !menu.matches(':focus-within')) {
         this.classList.remove('visible')
       }
     })
