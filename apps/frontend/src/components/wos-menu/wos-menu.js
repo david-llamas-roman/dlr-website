@@ -19,6 +19,7 @@
 'use strict'
 
 import BaseComponent from '@/components/base-component.js'
+import { t } from '@/utils/i18n.js'
 
 class WosMenu extends BaseComponent {
   constructor() {
@@ -28,53 +29,85 @@ class WosMenu extends BaseComponent {
   #getTemplate() {
     const template = document.createElement('template')
 
+    const loginAccountInformationLabels = Object.values(
+      t('footer.wos-menu.login.account-information.labels'),
+    )
+
+    const registerAccountInformationLabels = Object.values(
+      t('footer.wos-menu.register.account-information.labels'),
+    )
+    const registerLegalLabels = Object.values(
+      t('footer.wos-menu.register.legal.labels'),
+    )
+
     template.innerHTML = `
       ${this.#getStyles()}
       <article class="wos__menu">
-        <article class="search__container">
-          <input type="search" name="wos_search" id="wos__search">
-        </article>
+        <form method="post" class="login">
+          <h2>${t('footer.wos-menu.login.title')}</h2>
 
-        <article class="summary__view" data-summary-view>
-          <article class="pinned">
-            <div class="pinned__header">
-              <h5>Pinned</h5>
-              <div class="all__button">
-                <div>
-                  All <span>&gt;</span>
-                </div>
-              </div>
-            </div>
-          </article>
-          <article class="recommended">
-            <h5>Recommended</h5>
-          </article>
-        </article>
+          <fieldset class="account">
+            <legend>${t('footer.wos-menu.login.account-information.legend')}</legend>
 
-        <article class="full__view" data-full-view>
-          <div class="view__header">
-            <h5>All</h5>
-            <div class="back__button">
-              <div>
-                <span>&lt;</span> Back
-              </div>
-            </div>
-          </div>
-        </article>
+            <label for="email">${loginAccountInformationLabels[0]}</label>
+            <input type="email" name="email" id="email" required>
 
-        <article class="user__bar">
-          <div class="user">
-            <div class="user__content">
-              <div class="user__icon">
-                <div class="user__figure">
-                  <div class="user__head"></div>
-                  <div class="user__body"></div>
-                </div>
-              </div>
-              <h5>Sign In | Sign Up</h5>
+            <label for="password">${loginAccountInformationLabels[1]}</label>
+            <input type="password" name="password" id="password" required>
+          </fieldset>
+
+          <button type="submit" class="submit">${t('footer.wos-menu.login.submit-button')}</button>
+
+          <p class="question">${t('footer.wos-menu.login.question')} <button type="button">${t('footer.wos-menu.login.question-button')}</button></p>
+        </form>
+
+        <form method="post" class="register hide">
+          <h2>${t('footer.wos-menu.register.title')}</h2>
+
+          <fieldset class="account">
+            <legend>${t('footer.wos-menu.register.account-information.legend')}</legend>
+
+            <div>
+              <label for="full-name">${registerAccountInformationLabels[0]}</label>
+              <input type="text" name="full-name" id="full-name" required>
             </div>
-          </div>
-        </article>
+
+            <div>
+              <label for="email">${registerAccountInformationLabels[1]}</label>
+              <input type="email" name="email" id="email" required>
+            </div>
+
+            <div>
+              <label for="password">${registerAccountInformationLabels[2]}</label>
+              <input type="password" name="password" id="password" required>
+            </div>
+
+            <div>
+              <label for="confirm-password">${registerAccountInformationLabels[3]}</label>
+              <input type="password" name="confirm-password" id="confirm-password" required>
+            </div>
+          </fieldset>
+
+          <fieldset class="legal">
+            <legend>${t('footer.wos-menu.register.legal.legend')}</legend>
+
+            <label for="terms">
+              <input type="checkbox" name="terms" id="terms" required>
+
+              ${registerLegalLabels[0]}
+            </label>
+
+            <label for="privacy">
+              <input type="checkbox" name="privacy" id="privacy" required>
+
+              ${registerLegalLabels[1]}
+            </label>
+          </fieldset>
+
+          <button type="submit" class="submit">${t('footer.wos-menu.register.submit-button')}</button>
+
+          <p class="question">${t('footer.wos-menu.register.question')} <button type="button">${t('footer.wos-menu.register.question-button')}</button></p>
+        </form>
       </article>
       </article>
     `
@@ -107,13 +140,11 @@ class WosMenu extends BaseComponent {
         }
 
         .wos__menu {
-          position: relative;
-
           display: grid;
-          grid-template-rows: auto 1fr auto;
+          place-items: center;
 
           aspect-ratio: 9/11;
-          height: clamp(750px, 75dvh, 1132.5px);
+          height: clamp(715px, 75dvh, 1132.5px);
 
           margin-bottom: max(4rem, 2.9vmax);
 
@@ -129,261 +160,160 @@ class WosMenu extends BaseComponent {
 
           box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
 
-          .search__container {
-            #wos__search {
-              padding: 0.35rem 0.8rem;
-              margin: 1.9rem 1.5rem 0.85rem 1.5rem;
+          .login, .register {
+            width: var(--max-percentage, 100%);
 
-              color: #fff;
-              background-color: rgba(41, 41, 41, 0.8);
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr auto auto;
+            gap: 1rem;
 
-              outline: none;
-              border: 1px solid rgba(255, 255, 255, 0.15);
-              border-radius: 1rem;
-              -webkit-border-radius: 1rem;
-              -moz-border-radius: 1rem;
-              -ms-border-radius: 1rem;
-              -o-border-radius: 1rem;
+            padding: 1rem;
 
-              box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-            }
-          }
+            & h2 {
+              color: var(--pantone-red, #da291c);
 
-          .summary__view {
-            display: var(--summary-view);
-            grid-template-rows: 1fr 0.45fr;
+              font-style: 'Open Sans';
+              font-weight: 700;
+              font-size: max(40px, 2.5vmax);
 
-            .pinned,
-            .recommended {
-              padding: 1.5rem 2rem 1rem 2rem;
-              margin: 0 1.5rem 0 1.5rem;
-
-              & h5 {
-                color: #fff;
-
-                text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-              }
-            }
-            
-            .pinned {
-              .pinned__header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-
-                .all__button {
-                  position: relative;
-                  width: fit-content;
-                  height: fit-content;
-
-                  display: grid;
-                  place-items: center;
-
-                  & div {
-                    width: 48.86px;
-                    height: 25px;
-
-                    padding: 0.25rem 0.5rem;
-
-                    color: #fff;
-                    background-color: rgba(255, 255, 255, 0.05);
-
-                    font-size: 11.5px;
-
-                    border: 1px solid rgba(255, 255, 255, 0.15);
-                    border-radius: 4px;
-                    -webkit-border-radius: 4px;
-                    -moz-border-radius: 4px;
-                    -ms-border-radius: 4px;
-                    -o-border-radius: 4px;
-
-                    & span {
-                      padding-left: 0.5rem;
-                    }
-                  }
-
-                  #all__checkbox {
-                    position: absolute;
-
-                    width: 48.86px;
-                    height: 25px;
-
-                    opacity: 0;
-
-                    cursor: pointer;
-                  }
-                }
-              }
-            }
-          }
-          
-          .full__view {
-            display: var(--full-view);
-
-            padding: 1.5rem 2rem 1rem 2rem;
-            margin: 0 1.5rem 0 1.5rem;
-
-            & h5 {
-              color: #fff;
-
-              text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+              text-align: center;
+              text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
             }
 
-            .view__header {
+            & fieldset {
               display: flex;
-              justify-content: space-between;
-              align-items: center;
+              flex-direction: column;
+              gap: 0.25rem;
 
-              .back__button {
-                position: relative;
-                width: fit-content;
-                height: fit-content;
+              padding: 0.5rem;
 
-                display: grid;
-                place-items: center;
+              border-radius: 6px;
+              border: 1px solid var(--light-grey-4, rgba(255, 255, 255, 0.78));
 
-                & div {
-                  width: 61.16px;
-                  height: 25px;
+              & legend {
+                padding: 0.25rem;
 
-                  padding: 0.25rem 0.5rem;
+                color: var(--light-grey-4, rgba(255, 255, 255, 0.78));
 
-                  color: #fff;
-                  background-color: rgba(255, 255, 255, 0.05);
+                font-family: 'Open Sans';
+                font-size: max(14px, 0.75vmax);
+              }
 
-                  font-size: 11.5px;
+              & div {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+              }
 
-                  border: 1px solid rgba(255, 255, 255, 0.15);
-                  border-radius: 4px;
-                  -webkit-border-radius: 4px;
-                  -moz-border-radius: 4px;
-                  -ms-border-radius: 4px;
-                  -o-border-radius: 4px;
+              & label {
+                padding-left: 0.25rem;
 
-                  & span {
-                    padding-right: 0.5rem;
-                  }
-                }
+                color: var(--white, #fff);
 
-                #back__checkbox {
-                  position: absolute;
+                font-family: 'Open Sans';
+                font-size: max(16px, 0.9vmax);
+                font-weight: 700;
 
-                  width: 61.16px;
-                  height: 25px;
+                text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+              }
 
-                  opacity: 0;
+              & input {
+                padding: 0.25rem 0.5rem;
+
+                color: var(--white, #fff);
+                background-color: var(--light-grey-2, rgba(255, 255, 255, 0.28));
+
+                font-family: 'Open Sans';
+                font-size: max(16px, 0.9vmax);
+
+                text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+
+                outline: none;
+                border-radius: 4px;
+                border: 1px solid var(--black, #000);
+
+                &[type="checkbox"] {
+                  appearance: none;
+                  -webkit-appearance: none;
+
+                  border: 1px solid var(--black, #000);
 
                   cursor: pointer;
+
+                  &:checked {
+                    background-color: var(--pantone-red, #da291c);
+                  }
                 }
               }
             }
-          }
 
-          .user__bar {
-            padding: 1rem 2.5rem;
+            .submit {
+              width: 160px;
 
-            background-color: rgba(0, 0, 0, 0.25);
+              padding: 0.25rem 1rem;
+              margin: 0 auto;
 
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
+              background: var(--pantone-red, #da291c);
+              color: var(--white, #fff);
 
-            .user {
-              position: relative;
-              width: fit-content;
-              height: fit-content;
+              font-family: 'Open Sans';
+              font-size: max(16px, 0.9vmax);
+              font-weight: 700;
 
-              display: grid;
-              place-items: center;
+              border-radius: 4px;
+              border: none;
+
+              transition: transform 0.2s, background 0.2s, color 0.2s;
+
+              cursor: pointer;
 
               &:hover {
-                .user__content {
-                  background-color: rgba(255, 255, 255, 0.15);
-                }
+                background: var(--white, #fff);
+                color: var(--pantone-red, #da291c);
+
+                transform: scale(1.1);
               }
+            }
 
-              .user__content {
-                width: 176.8px;
-                height: 38px;
+            .question {
+              padding-top: 0.5rem;
 
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 0.8rem;
+              color: var(--white, #fff);
 
-                padding: 0.25rem 0.75rem;
+              font-family: 'Open Sans';
+              font-size: max(14px, 0.75vmax);
 
-                border-radius: 4px;
-                -webkit-border-radius: 4px;
-                -moz-border-radius: 4px;
-                -ms-border-radius: 4px;
-                -o-border-radius: 4px;
+              text-align: center;
 
-                .user__icon {
-                  width: 30px;
-                  height: 30px;
+              & button {
+                padding-left: 0.25rem;
 
-                  display: grid;
-                  place-items: center;
+                background-color: transparent;
+                color: var(--pantone-red, #da291c);
 
-                  background-color: #e6e6e6;
+                font-family: 'Open Sans';
+                font-size: max(14px, 0.75vmax);
+                font-weight: 700;
 
-                  border-radius: 50%;
-                  -webkit-border-radius: 50%;
-                  -moz-border-radius: 50%;
-                  -ms-border-radius: 50%;
-                  -o-border-radius: 50%;
+                border: none;
 
-                  .user__figure {
-                    display: grid;
-                    place-items: center;
-                    gap: 0.135rem;
-
-                    .user__head {
-                      width: 10px;
-                      height: 10px;
-
-                      background-color: rgba(41, 41, 41, 0.6);
-
-                      border-radius: 50%;
-                      -webkit-border-radius: 50%;
-                      -moz-border-radius: 50%;
-                      -ms-border-radius: 50%;
-                      -o-border-radius: 50%;
-                    }
-
-                    .user__body {
-                      width: 18px;
-                      height: 8px;
-
-                      background-color: rgba(41, 41, 41, 0.6);
-
-                      border-radius: 50%;
-                      -webkit-border-radius: 50%;
-                      -moz-border-radius: 50%;
-                      -ms-border-radius: 50%;
-                      -o-border-radius: 50%;
-                    }
-                  }
-                }
-
-                & h5 {
-                  color: #fff;
-
-                  text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-                }
-              }
-
-              #user__checkbox {
-                position: absolute;
-
-                width: 176.8px;
-                height: 38px;
-
-                opacity: 0;
+                transition: transform 0.2s;
 
                 cursor: pointer;
+
+                &:hover {
+                  transform: scale(1.1);
+                }
               }
+            }
+
+            &.hide {
+              display: none;
+            }
+
+            &.show {
+              display: grid;
             }
           }
         }
@@ -404,6 +334,8 @@ class WosMenu extends BaseComponent {
   connectedCallback() {
     this.render()
 
+    this.#setupFormSwitcher()
+
     this.addEventListener('transitionend', (event) => {
       if (
         event.propertyName === 'transform' &&
@@ -419,6 +351,30 @@ class WosMenu extends BaseComponent {
       }
     })
     observer.observe(this, { attributes: true, attributeFilter: ['class'] })
+  }
+
+  #setupFormSwitcher() {
+    const loginForm = this.shadowRoot.querySelector('.login')
+    const registerForm = this.shadowRoot.querySelector('.register')
+
+    const loginSwitchButton = loginForm.querySelector('.question button')
+    const registerSwitchButton = registerForm.querySelector('.question button')
+
+    loginSwitchButton.addEventListener('click', () => {
+      loginForm.classList.add('hide')
+      loginForm.classList.remove('show')
+
+      registerForm.classList.remove('hide')
+      registerForm.classList.add('show')
+    })
+
+    registerSwitchButton.addEventListener('click', () => {
+      registerForm.classList.add('hide')
+      registerForm.classList.remove('show')
+
+      loginForm.classList.remove('hide')
+      loginForm.classList.add('show')
+    })
   }
 }
 
